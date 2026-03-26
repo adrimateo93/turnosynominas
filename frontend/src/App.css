@@ -1,0 +1,120 @@
+/* App-specific styles */
+
+/* Navigation */
+.nav-link {
+  @apply px-4 py-2 rounded-sm font-medium text-sm;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-link:hover {
+  @apply bg-secondary;
+}
+
+.nav-link.active {
+  @apply bg-primary text-primary-foreground;
+}
+
+/* Cards */
+.stat-card {
+  @apply p-4 rounded-md border bg-card;
+  transition: border-color 0.15s ease;
+}
+
+.stat-card:hover {
+  @apply border-primary/50;
+}
+
+/* Tables */
+.payroll-table th {
+  @apply text-left text-xs uppercase tracking-wider font-semibold text-muted-foreground py-3 px-4;
+}
+
+.payroll-table td {
+  @apply py-3 px-4 tabular-nums;
+}
+
+.payroll-table tr:not(:last-child) {
+  @apply border-b;
+}
+
+/* Forms */
+.form-label {
+  @apply text-sm font-medium text-foreground uppercase tracking-wider;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply bg-primary text-primary-foreground px-4 py-2 rounded-sm font-medium;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover {
+  @apply opacity-90;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  @apply bg-secondary text-secondary-foreground px-4 py-2 rounded-sm font-medium;
+  transition: background-color 0.15s ease;
+}
+
+.btn-secondary:hover {
+  @apply bg-secondary/80;
+}
+
+/* Color picker */
+.color-option {
+  @apply w-8 h-8 rounded-sm cursor-pointer border-2 border-transparent;
+  transition: transform 0.1s ease, border-color 0.1s ease;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+}
+
+.color-option.selected {
+  @apply border-foreground;
+}
+
+/* Modal */
+.modal-overlay {
+  @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-50;
+}
+
+.modal-content {
+  @apply fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-card rounded-md shadow-xl z-50 w-full max-w-lg max-h-[90vh] overflow-auto;
+}
+
+/* Month navigation */
+.month-nav-btn {
+  @apply p-2 rounded-sm hover:bg-secondary;
+  transition: background-color 0.15s ease;
+}
+
+/* Loading spinner */
+.spinner {
+  @apply w-6 h-6 border-2 border-primary border-t-transparent rounded-full;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* PDF export styles (for print) */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    @apply bg-white text-black;
+  }
+  
+  .payroll-table {
+    @apply border border-black;
+  }
+}
