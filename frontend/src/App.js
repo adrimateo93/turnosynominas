@@ -13,7 +13,7 @@ import Settings from "@/pages/Settings";
 import Payroll from "@/pages/Payroll";
 
 const BACKEND_URL = "http://localhost:8000";
-export const API = `${BACKEND_URL}/api`;
+export const API = `${BACKEND_URL}/api`; 
 
 // Register Service Worker for PWA and Push Notifications
 if ('serviceWorker' in navigator) {
