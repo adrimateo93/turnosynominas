@@ -27,6 +27,15 @@ JWT_SECRET = os.environ.get('JWT_SECRET', 'seguriturno-secret-key-2026')
 JWT_ALGORITHM = "HS256"
 
 app = FastAPI(title="SeguriTurno API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://turnosynominas.vercel.app"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer()
 
@@ -1231,16 +1240,6 @@ async def get_salary_table(categoria: str):
 
 # Include router
 app.include_router(api_router)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "https://turnosynominas.vercel.app"
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
