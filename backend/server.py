@@ -25,18 +25,19 @@ db = client[db_name]
 # JWT Config
 JWT_SECRET = os.environ.get('JWT_SECRET', 'seguriturno-secret-key-2026')
 JWT_ALGORITHM = "HS256"
-
 app = FastAPI(title="SeguriTurno API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://turnosynominas.vercel.app"]
+    allow_origins=["https://turnosynominas.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer()
-)
+
 # Spanish National Holidays 2026
 SPANISH_HOLIDAYS_2026 = [
     "2026-01-01",  # Año Nuevo
