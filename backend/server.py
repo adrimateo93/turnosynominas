@@ -36,6 +36,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi.responses import Response
+
+@app.options("/{full_path:path}")
+async def options_handler():
+    response = Response()
+    response.headers["Access-Control-Allow-Origin"] = "https://turnosynominas.vercel.app"
+    response.headers["Access-Control-Allow-Methods"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    return response
+
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer()
 
