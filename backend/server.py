@@ -29,7 +29,7 @@ JWT_ALGORITHM = "HS256"
 app = FastAPI(title="SeguriTurno API")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
+    allow_origins=["*"],
         "https://turnosynominas.vercel.app"
     ],
     allow_credentials=True,
