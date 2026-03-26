@@ -12,7 +12,7 @@ import Dashboard from "@/pages/Dashboard";
 import Settings from "@/pages/Settings";
 import Payroll from "@/pages/Payroll";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = "http://localhost:8000";
 export const API = `${BACKEND_URL}/api`;
 
 // Register Service Worker for PWA and Push Notifications
