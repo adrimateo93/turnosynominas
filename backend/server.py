@@ -26,11 +26,17 @@ db = client[db_name]
 JWT_SECRET = os.environ.get('JWT_SECRET', 'seguriturno-secret-key-2026')
 JWT_ALGORITHM = "HS256"
 
-app = FastAPI(title="SeguriTurno API")
+from fastapi import FastAPI
+
+app = FastAPI()
+
+from fastapi.middleware.cors import CORSMiddleware
+
+origins = ["https://turnosynominas.vercel.app"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://turnosynominas.vercel.app"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
