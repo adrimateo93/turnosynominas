@@ -30,7 +30,7 @@ app = FastAPI(title="SeguriTurno API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 👈 ASÍ
+    allow_origins=["*"],  # temporal
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
