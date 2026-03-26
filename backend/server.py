@@ -27,12 +27,11 @@ JWT_SECRET = os.environ.get('JWT_SECRET', 'seguriturno-secret-key-2026')
 JWT_ALGORITHM = "HS256"
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-from fastapi.middleware.cors import CORSMiddleware
-
-origins = ["https://turnosynominas.vercel.app"]
+origins = ["*"]  # luego puedes cambiar a tu dominio
 
 app.add_middleware(
     CORSMiddleware,
@@ -41,16 +40,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-from fastapi.responses import Response
-
-@app.options("/{full_path:path}")
-async def options_handler():
-    response = Response()
-    response.headers["Access-Control-Allow-Origin"] = "https://turnosynominas.vercel.app"
-    response.headers["Access-Control-Allow-Methods"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "*"
-    return response
 
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer()
