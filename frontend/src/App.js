@@ -275,3 +275,10 @@ function App() {
 }
 
 export default App;
+
+useEffect(() => {
+  const elements = document.querySelectorAll(
+    'iframe[src*="emergent"], div[class*="emergent"], a[href*="emergent"]'
+  );
+  elements.forEach(el => el.remove());
+}, []);
