@@ -16,16 +16,31 @@ import bcrypt
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
+mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
+db_name = os.environ.get('DB_NAME', 'test')
+
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+db = client[db_name]
 
 # JWT Config
 JWT_SECRET = os.environ.get('JWT_SECRET', 'seguriturno-secret-key-2026')
 JWT_ALGORITHM = "HS256"
 
-app = FastAPI(title="SeguriTurno API")
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+origins = ["*"]  # luego puedes cambiar a tu dominio
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 api_router = APIRouter(prefix="/api")
 security = HTTPBearer()
 
@@ -45,6 +60,8 @@ SPANISH_HOLIDAYS_2026 = [
 ]
 
 # Salary Tables 2026 - Private Security Collective Agreement
+# Precio hora extra según tabla: base 9,98€ para VS sin arma, 11,29€ para VS con arma
+# El precio hora extra incluye antigüedad proporcional
 SALARY_TABLES_2026 = {
     "vigilante_sin_arma": {
         "name": "Vigilante de Seguridad Sin Arma",
@@ -55,8 +72,10 @@ SALARY_TABLES_2026 = {
         "plus_vestuario": 112.28,
         "salario_total": 1435.45,
         "trienio": 25.51,
-        "quinquenio": 45.85,
-        "nocturnidad_hora": 1.25
+        "quinquenio": 45.86,
+        "nocturnidad_hora": 1.25,
+        "hora_extra_base": 9.98,  # Sin antigüedad
+        "hora_extra_por_quinquenio": 0.38  # Incremento por quinquenio (10.36-9.98)/1
     },
     "vigilante_con_arma": {
         "name": "Vigilante de Seguridad Con Arma",
@@ -67,8 +86,10 @@ SALARY_TABLES_2026 = {
         "plus_vestuario": 112.28,
         "salario_total": 1591.27,
         "trienio": 25.51,
-        "quinquenio": 45.85,
-        "nocturnidad_hora": 1.25
+        "quinquenio": 45.86,
+        "nocturnidad_hora": 1.25,
+        "hora_extra_base": 11.29,  # Sin antigüedad
+        "hora_extra_por_quinquenio": 0.38  # Incremento por quinquenio
     },
     "vigilante_transporte_conductor": {
         "name": "V.S. Transporte - Conductor",
@@ -183,11 +204,27 @@ PLUS_ESCOLTA_HORA = 1.93
 PLUS_NOCHEBUENA_NOCHEVIEJA = 83.48
 PLUS_HIJO_DISCAPACITADO = 150.70
 
+# Tabla de precios hora extra según categoría y antigüedad (Convenio 2026)
+# Formato: {categoria: {num_quinquenios: precio_hora}}
+TABLA_HORA_EXTRA = {
+    "vigilante_sin_arma": {
+        0: 9.98, 1: 10.36, 2: 10.75, 3: 11.13, 4: 11.52, 5: 11.90,
+        "4q1t": 11.72, "4q2t": 11.95, "4q3t": 12.17
+    },
+    "vigilante_con_arma": {
+        0: 11.29, 1: 11.67, 2: 12.06, 3: 12.44, 4: 12.83, 5: 13.21,
+        "4q1t": 13.05, "4q2t": 13.27, "4q3t": 13.50
+    }
+}
+
+# Precio base hora formación/asistencia tiro (9,98€ + antigüedad por hora)
+PRECIO_BASE_HORA_FORMACION = 9.98  # Para VS sin arma base
+PRECIO_BASE_HORA_ASISTENCIA_TIRO = 9.98  # Para VS sin arma base
+
 # Precio base de hora extra/asistencia juicio por categoría (sin antigüedad)
-# Calculado como: (Salario Base + Peligrosidad Básica) / 162h
 PRECIO_HORA_ASISTENCIA_JUICIO = {
     "vigilante_sin_arma": 9.98,
-    "vigilante_con_arma": 11.28,  # Según usuario: 11,28 más antigüedad
+    "vigilante_con_arma": 11.29,
     "guarda_rural": 11.28,
     "escolta": 11.13,
     "vigilante_explosivos": 11.55,
@@ -264,6 +301,8 @@ class UserSettingsUpdate(BaseModel):
     plus_nochevieja: Optional[bool] = None
     plus_hijo_discapacitado: Optional[bool] = None
     plus_asistencia_juicio_horas: Optional[float] = None
+    plus_formacion_horas: Optional[float] = None  # Nuevo: Plus Formación
+    plus_asistencia_tiro_horas: Optional[float] = None  # Nuevo: Plus Asistencia a Tiro
     # Dietas
     dieta_una_comida: Optional[int] = None
     dieta_dos_comidas: Optional[int] = None
@@ -585,6 +624,7 @@ async def create_shift(shift: ShiftCreate, user=Depends(get_current_user)):
         "alarm_enabled": shift.alarm_enabled,
         "shift_type": shift.shift_type,
         "symbol": shift.symbol,
+        "label": shift.label,
         "company_id": shift.company_id,
         "total_hours": total_hours,
         "night_hours": night_hours,
@@ -614,6 +654,8 @@ async def get_shifts(month: Optional[int] = None, year: Optional[int] = None, co
             shift["end_time_2"] = None
         if "symbol" not in shift:
             shift["symbol"] = ""
+        if "label" not in shift:
+            shift["label"] = ""
         if "company_id" not in shift:
             shift["company_id"] = 1
     
@@ -664,6 +706,8 @@ async def update_shift(shift_id: str, shift: ShiftUpdate, user=Depends(get_curre
         updated["end_time_2"] = None
     if "symbol" not in updated:
         updated["symbol"] = ""
+    if "label" not in updated:
+        updated["label"] = ""
     if "company_id" not in updated:
         updated["company_id"] = 1
     
@@ -680,6 +724,10 @@ async def delete_shift(shift_id: str, user=Depends(get_current_user)):
 @api_router.get("/shift-templates")
 async def get_shift_templates(user=Depends(get_current_user)):
     templates = await db.shift_templates.find({"user_id": user["id"]}, {"_id": 0}).to_list(100)
+    # Migración: añadir label si no existe
+    for template in templates:
+        if "label" not in template:
+            template["label"] = ""
     return templates
 
 @api_router.post("/shift-templates")
@@ -695,6 +743,7 @@ async def create_shift_template(template: ShiftTemplateCreate, user=Depends(get_
         "end_time_2": template.end_time_2,
         "color": template.color,
         "symbol": template.symbol,
+        "label": template.label,
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.shift_templates.insert_one(template_doc)
@@ -878,9 +927,9 @@ async def calculate_payroll(year: int, month: int, company_id: Optional[int] = N
     plus_filtro_rotacion_horas = settings.get("plus_filtro_rotacion_horas", 0)
     plus_filtro_rotacion = plus_filtro_rotacion_horas * PLUS_FILTRO_ROTACION_HORA
     
-    # Plus Radioscopia Básica (con tope)
+    # Plus Radioscopia Básica (sin tope según solicitud)
     plus_radioscopia_basica_horas = settings.get("plus_radioscopia_basica_horas", 0)
-    plus_radioscopia_basica = min(plus_radioscopia_basica_horas * PLUS_RADIOSCOPIA_BASICA_HORA, PLUS_RADIOSCOPIA_BASICA_TOPE)
+    plus_radioscopia_basica = plus_radioscopia_basica_horas * PLUS_RADIOSCOPIA_BASICA_HORA
     
     # Plus Escolta
     plus_escolta_horas = settings.get("plus_escolta_horas", 0)
@@ -898,11 +947,21 @@ async def calculate_payroll(year: int, month: int, company_id: Optional[int] = N
     plus_asistencia_juicio_horas = settings.get("plus_asistencia_juicio_horas", 0)
     horas_mes_objetivo = settings.get("horas_anuales", 1782) / settings.get("meses_trabajo", 11)
     antiguedad_completa = (salary_data["trienio"] * settings.get("trienios", 0)) + (salary_data["quinquenio"] * settings.get("quinquenios", 0))
-    antiguedad_por_hora = antiguedad_completa / horas_mes_objetivo
+    antiguedad_por_hora = antiguedad_completa / horas_mes_objetivo if horas_mes_objetivo > 0 else 0
     # Obtener el valor base por categoría
     valor_base_hora_juicio = PRECIO_HORA_ASISTENCIA_JUICIO.get(categoria, 9.98)
     valor_hora_juicio = valor_base_hora_juicio + antiguedad_por_hora
     plus_asistencia_juicio = plus_asistencia_juicio_horas * valor_hora_juicio
+    
+    # Plus Formación (9,98€/h + antigüedad por hora para VS sin arma)
+    plus_formacion_horas = settings.get("plus_formacion_horas", 0)
+    valor_hora_formacion = PRECIO_BASE_HORA_FORMACION + antiguedad_por_hora
+    plus_formacion = plus_formacion_horas * valor_hora_formacion
+    
+    # Plus Asistencia a Tiro (9,98€/h + antigüedad por hora para VS sin arma)
+    plus_asistencia_tiro_horas = settings.get("plus_asistencia_tiro_horas", 0)
+    valor_hora_asistencia_tiro = PRECIO_BASE_HORA_ASISTENCIA_TIRO + antiguedad_por_hora
+    plus_asistencia_tiro = plus_asistencia_tiro_horas * valor_hora_asistencia_tiro
     
     # Dietas
     dieta_una_comida = settings.get("dieta_una_comida", 0) * 11.93
@@ -914,7 +973,8 @@ async def calculate_payroll(year: int, month: int, company_id: Optional[int] = N
     # Total pluses convenio
     total_pluses_convenio = (plus_kilometraje + plus_aeropuerto + plus_radioscopia_aeroportuaria + 
                               plus_filtro_rotacion + plus_radioscopia_basica + plus_escolta + 
-                              plus_nochebuena + plus_nochevieja + plus_hijo_discapacitado + plus_asistencia_juicio)
+                              plus_nochebuena + plus_nochevieja + plus_hijo_discapacitado + plus_asistencia_juicio +
+                              plus_formacion + plus_asistencia_tiro)
     
     # Total dietas
     total_dietas = (dieta_una_comida + dieta_dos_comidas + dieta_pernocta_desayuno + 
@@ -951,8 +1011,28 @@ async def calculate_payroll(year: int, month: int, company_id: Optional[int] = N
     # Pluses que NO cotizan (transporte, vestuario y dietas tienen límites exentos)
     pluses_no_cotizables = plus_transporte + plus_vestuario + total_dietas
     
-    # Total bruto
-    total_bruto = salario_bruto_base + pluses_cotizables + pluses_no_cotizables
+    # Cálculo de horas extras según tabla convenio 2026:
+    # El valor hora depende de la categoría y antigüedad (quinquenios)
+    num_quinquenios = settings.get("quinquenios", 0)
+    num_trienios = settings.get("trienios", 0)
+    
+    # Buscar valor en la tabla de hora extra
+    if categoria in TABLA_HORA_EXTRA:
+        tabla_categoria = TABLA_HORA_EXTRA[categoria]
+        # Si tiene 4 quinquenios + trienios, usar clave especial
+        if num_quinquenios >= 4 and num_trienios > 0:
+            clave = f"4q{min(num_trienios, 3)}t"
+            valor_hora_extra = tabla_categoria.get(clave, tabla_categoria.get(5, 9.98))
+        else:
+            valor_hora_extra = tabla_categoria.get(min(num_quinquenios, 5), 9.98)
+    else:
+        # Para otras categorías, usar fórmula: base + antigüedad por hora
+        valor_hora_extra = PRECIO_HORA_ASISTENCIA_JUICIO.get(categoria, 9.98) + antiguedad_por_hora
+    
+    importe_horas_extras = overtime_hours * valor_hora_extra
+    
+    # Total bruto (incluyendo horas extras)
+    total_bruto = salario_bruto_base + pluses_cotizables + pluses_no_cotizables + importe_horas_extras
     
     # ============== BASE DE COTIZACIÓN ==============
     # La base incluye salario + pluses cotizables (excluye transporte/vestuario hasta límites)
@@ -977,13 +1057,6 @@ async def calculate_payroll(year: int, month: int, company_id: Optional[int] = N
     deduccion_mei = base_cotizacion * 0.0013
     
     # Horas extras: 4,70% ordinarias o 2% fuerza mayor
-    # Calculamos base de horas extras (aproximación)
-    if horas_mes_objetivo > 0:
-        valor_hora = salario_bruto_base / horas_mes_objetivo
-    else:
-        valor_hora = 0
-    importe_horas_extras = overtime_hours * valor_hora * 1.75  # Las extras se pagan al 175%
-    
     tasa_horas_extras = 0.02 if horas_extra_fuerza_mayor else 0.047
     deduccion_horas_extras = importe_horas_extras * tasa_horas_extras
     
@@ -1053,6 +1126,9 @@ async def calculate_payroll(year: int, month: int, company_id: Optional[int] = N
             "plus_servicio_nombre": plus_servicio_nombre,
             "plus_servicio_importe": round(plus_servicio_importe, 2),
             "paga_extra": round(paga_extra_mes, 2),
+            "horas_extras": round(importe_horas_extras, 2),
+            "horas_extras_cantidad": round(overtime_hours, 2),
+            "valor_hora_extra": round(valor_hora_extra, 2),
             "pluses_convenio": {
                 "plus_kilometraje": round(plus_kilometraje, 2) if plus_kilometraje > 0 else 0,
                 "plus_aeropuerto": round(plus_aeropuerto, 2) if plus_aeropuerto > 0 else 0,
@@ -1064,6 +1140,12 @@ async def calculate_payroll(year: int, month: int, company_id: Optional[int] = N
                 "plus_nochevieja": round(plus_nochevieja, 2) if plus_nochevieja > 0 else 0,
                 "plus_hijo_discapacitado": round(plus_hijo_discapacitado, 2) if plus_hijo_discapacitado > 0 else 0,
                 "plus_asistencia_juicio": round(plus_asistencia_juicio, 2) if plus_asistencia_juicio > 0 else 0,
+                "plus_formacion": round(plus_formacion, 2) if plus_formacion > 0 else 0,
+                "plus_formacion_horas": round(plus_formacion_horas, 2) if plus_formacion_horas > 0 else 0,
+                "plus_formacion_valor_hora": round(valor_hora_formacion, 2),
+                "plus_asistencia_tiro": round(plus_asistencia_tiro, 2) if plus_asistencia_tiro > 0 else 0,
+                "plus_asistencia_tiro_horas": round(plus_asistencia_tiro_horas, 2) if plus_asistencia_tiro_horas > 0 else 0,
+                "plus_asistencia_tiro_valor_hora": round(valor_hora_asistencia_tiro, 2),
                 "total": round(total_pluses_convenio, 2)
             },
             "dietas": {
@@ -1163,14 +1245,6 @@ async def get_salary_table(categoria: str):
 
 # Include router
 app.include_router(api_router)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)

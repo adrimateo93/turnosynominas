@@ -68,6 +68,8 @@ export default function Settings() {
     plus_nochebuena: false,
     plus_nochevieja: false,
     plus_asistencia_juicio_horas: 0,
+    plus_formacion_horas: 0,
+    plus_asistencia_tiro_horas: 0,
     plus_hijo_discapacitado: false,
     // Dietas
     dieta_una_comida: 0,
@@ -848,6 +850,56 @@ export default function Settings() {
                   {settings.plus_hijo_discapacitado && (
                     <span className="text-sm font-medium text-green-600 ml-auto">
                       +150,70 €
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Plus Formación */}
+              <div className="space-y-2 p-3 rounded-lg border">
+                <Label className="text-sm font-medium">Plus Formación</Label>
+                <p className="text-xs text-muted-foreground">9,98 €/hora + antigüedad por hora</p>
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    placeholder="Horas"
+                    value={settings.plus_formacion_horas || ""}
+                    onChange={(e) => setSettings({ ...settings, plus_formacion_horas: parseFloat(e.target.value) || 0 })}
+                    className="w-24"
+                  />
+                  <span className="text-xs text-muted-foreground">horas</span>
+                  {settings.plus_formacion_horas > 0 && salaryInfo && (
+                    <span className="text-sm font-medium text-green-600 ml-auto">
+                      +{(settings.plus_formacion_horas * (
+                        9.98 + ((salaryInfo.trienio * settings.trienios) + (salaryInfo.quinquenio * settings.quinquenios)) / horasMesConJornada
+                      )).toFixed(2)} €
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Plus Asistencia a Tiro */}
+              <div className="space-y-2 p-3 rounded-lg border">
+                <Label className="text-sm font-medium">Plus Asistencia a Tiro</Label>
+                <p className="text-xs text-muted-foreground">9,98 €/hora + antigüedad por hora</p>
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    placeholder="Horas"
+                    value={settings.plus_asistencia_tiro_horas || ""}
+                    onChange={(e) => setSettings({ ...settings, plus_asistencia_tiro_horas: parseFloat(e.target.value) || 0 })}
+                    className="w-24"
+                  />
+                  <span className="text-xs text-muted-foreground">horas</span>
+                  {settings.plus_asistencia_tiro_horas > 0 && salaryInfo && (
+                    <span className="text-sm font-medium text-green-600 ml-auto">
+                      +{(settings.plus_asistencia_tiro_horas * (
+                        9.98 + ((salaryInfo.trienio * settings.trienios) + (salaryInfo.quinquenio * settings.quinquenios)) / horasMesConJornada
+                      )).toFixed(2)} €
                     </span>
                   )}
                 </div>

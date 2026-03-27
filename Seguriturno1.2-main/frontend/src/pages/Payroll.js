@@ -109,15 +109,15 @@ export default function Payroll() {
           h2 { 
             font-size: 14px; 
             margin: 20px 0 10px; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
             color: white;
             padding: 8px 12px;
             border-radius: 5px;
             font-weight: 600;
           }
-          h2.green { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-          h2.orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-          h2.blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+          h2.green { background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%); }
+          h2.red { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); }
+          h2.blue { background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%); }
           table { 
             width: 100%; 
             border-collapse: collapse; 
@@ -132,7 +132,7 @@ export default function Payroll() {
             border-bottom: 1px solid #e5e7eb;
           }
           th { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
             color: white;
             font-weight: 600;
             text-transform: uppercase;
@@ -152,9 +152,9 @@ export default function Payroll() {
             display: flex; 
             justify-content: space-between; 
             margin-bottom: 20px; 
-            border-bottom: 3px solid #3b82f6;
+            border-bottom: 3px solid #1d4ed8;
             padding-bottom: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -212,19 +212,20 @@ export default function Payroll() {
 
         <div class="columns">
           <div class="column">
-            <h2>DEVENGOS (Salario Bruto)</h2>
+            <h2 class="green">DEVENGOS (Salario Bruto)</h2>
             <table>
-              <tr><td>Salario Base</td><td class="right">${d.salario_base?.toFixed(2) || '0.00'} €</td></tr>
-              <tr><td>Plus Peligrosidad</td><td class="right">${d.plus_peligrosidad?.toFixed(2) || '0.00'} €</td></tr>
-              ${d.plus_actividad > 0 ? `<tr><td>Plus Actividad</td><td class="right">${d.plus_actividad?.toFixed(2)} €</td></tr>` : ''}
-              <tr><td>Plus Transporte</td><td class="right">${d.plus_transporte?.toFixed(2) || '0.00'} €</td></tr>
-              <tr><td>Plus Vestuario</td><td class="right">${d.plus_vestuario?.toFixed(2) || '0.00'} €</td></tr>
-              ${d.plus_antiguedad > 0 ? `<tr><td>Plus Antigüedad</td><td class="right">${d.plus_antiguedad?.toFixed(2)} €</td></tr>` : ''}
-              ${d.plus_responsable_equipo > 0 ? `<tr><td>Plus Responsable</td><td class="right">${d.plus_responsable_equipo?.toFixed(2)} €</td></tr>` : ''}
-              <tr><td>Plus Nocturnidad (${payrollData?.horas?.nocturnas?.toFixed(1) || 0}h)</td><td class="right">${d.plus_nocturnidad?.toFixed(2) || '0.00'} €</td></tr>
-              <tr><td>Plus Festivo (${payrollData?.horas?.festivas?.toFixed(1) || 0}h)</td><td class="right">${d.plus_festivo?.toFixed(2) || '0.00'} €</td></tr>
-              ${d.plus_servicio_importe > 0 ? `<tr style="background:#e8f5e9;"><td><strong>${d.plus_servicio_nombre || 'Plus Servicio'}</strong></td><td class="right"><strong>${d.plus_servicio_importe?.toFixed(2)} €</strong></td></tr>` : ''}
-              ${d.paga_extra > 0 ? `<tr><td><strong>Paga Extra ${payrollData?.pagas_extras?.prorrateadas ? '(prorrateada)' : ''}</strong></td><td class="right"><strong>${d.paga_extra?.toFixed(2)} €</strong></td></tr>` : ''}
+              <tr><td>Salario Base</td><td class="right positive">${d.salario_base?.toFixed(2) || '0.00'} €</td></tr>
+              <tr><td>Plus Peligrosidad</td><td class="right positive">${d.plus_peligrosidad?.toFixed(2) || '0.00'} €</td></tr>
+              ${d.plus_actividad > 0 ? `<tr><td>Plus Actividad</td><td class="right positive">${d.plus_actividad?.toFixed(2)} €</td></tr>` : ''}
+              <tr><td>Plus Transporte</td><td class="right positive">${d.plus_transporte?.toFixed(2) || '0.00'} €</td></tr>
+              <tr><td>Plus Vestuario</td><td class="right positive">${d.plus_vestuario?.toFixed(2) || '0.00'} €</td></tr>
+              ${d.plus_antiguedad > 0 ? `<tr><td>Plus Antigüedad</td><td class="right positive">${d.plus_antiguedad?.toFixed(2)} €</td></tr>` : ''}
+              ${d.plus_responsable_equipo > 0 ? `<tr><td>Plus Responsable</td><td class="right positive">${d.plus_responsable_equipo?.toFixed(2)} €</td></tr>` : ''}
+              <tr><td>Plus Nocturnidad (${payrollData?.horas?.nocturnas?.toFixed(1) || 0}h)</td><td class="right positive">${d.plus_nocturnidad?.toFixed(2) || '0.00'} €</td></tr>
+              <tr><td>Plus Festivo (${payrollData?.horas?.festivas?.toFixed(1) || 0}h)</td><td class="right positive">${d.plus_festivo?.toFixed(2) || '0.00'} €</td></tr>
+              ${d.plus_servicio_importe > 0 ? `<tr style="background:#e8f5e9;"><td><strong>${d.plus_servicio_nombre || 'Plus Servicio'}</strong></td><td class="right positive"><strong>${d.plus_servicio_importe?.toFixed(2)} €</strong></td></tr>` : ''}
+              ${d.paga_extra > 0 ? `<tr><td><strong>Paga Extra ${payrollData?.pagas_extras?.prorrateadas ? '(prorrateada)' : ''}</strong></td><td class="right positive"><strong>${d.paga_extra?.toFixed(2)} €</strong></td></tr>` : ''}
+              ${d.horas_extras > 0 ? `<tr style="background:#e8f5e9;"><td><strong>Horas Extras</strong> (${d.horas_extras_cantidad?.toFixed(1)}h × ${d.valor_hora_extra?.toFixed(2)}€/h)</td><td class="right positive"><strong>${d.horas_extras?.toFixed(2)} €</strong></td></tr>` : ''}
             </table>
             
             ${d.pluses_convenio && d.pluses_convenio.total > 0 ? `
@@ -240,6 +241,8 @@ export default function Payroll() {
                 ${d.pluses_convenio.plus_nochevieja > 0 ? `<tr class="plus-convenio"><td>Plus Nochevieja</td><td class="right positive">${d.pluses_convenio.plus_nochevieja.toFixed(2)} €</td></tr>` : ''}
                 ${d.pluses_convenio.plus_hijo_discapacitado > 0 ? `<tr class="plus-convenio"><td>Plus Hijo/a Discapacitado/a</td><td class="right positive">${d.pluses_convenio.plus_hijo_discapacitado.toFixed(2)} €</td></tr>` : ''}
                 ${d.pluses_convenio.plus_asistencia_juicio > 0 ? `<tr class="plus-convenio"><td>Plus Asistencia a Juicio</td><td class="right positive">${d.pluses_convenio.plus_asistencia_juicio.toFixed(2)} €</td></tr>` : ''}
+                ${d.pluses_convenio.plus_formacion > 0 ? `<tr class="plus-convenio"><td>Plus Formación (${d.pluses_convenio.plus_formacion_horas}h × ${d.pluses_convenio.plus_formacion_valor_hora.toFixed(2)}€/h)</td><td class="right positive">${d.pluses_convenio.plus_formacion.toFixed(2)} €</td></tr>` : ''}
+                ${d.pluses_convenio.plus_asistencia_tiro > 0 ? `<tr class="plus-convenio"><td>Plus Asistencia a Tiro (${d.pluses_convenio.plus_asistencia_tiro_horas}h × ${d.pluses_convenio.plus_asistencia_tiro_valor_hora.toFixed(2)}€/h)</td><td class="right positive">${d.pluses_convenio.plus_asistencia_tiro.toFixed(2)} €</td></tr>` : ''}
                 <tr style="background:#a8edea;"><td><strong>TOTAL PLUSES CONVENIO</strong></td><td class="right positive"><strong>${d.pluses_convenio.total.toFixed(2)} €</strong></td></tr>
               </table>
             ` : ''}
@@ -260,7 +263,7 @@ export default function Payroll() {
               <tr class="total"><td><strong>TOTAL BRUTO</strong></td><td class="right"><strong>${payrollData?.total_bruto?.toFixed(2) || '0.00'} €</strong></td></tr>
             </table>
 
-            <h2 class="orange">DEDUCCIONES TRABAJADOR</h2>
+            <h2 class="red">DEDUCCIONES TRABAJADOR</h2>
             <table>
               <tr><td>Contingencias Comunes (4,70%)</td><td class="right negative">-${ded.contingencias_comunes?.toFixed(2) || '0.00'} €</td></tr>
               <tr><td>Desempleo (${payrollData?.tipo_contrato === 'indefinido' ? '1,55%' : '1,60%'})</td><td class="right negative">-${ded.desempleo?.toFixed(2) || '0.00'} €</td></tr>
@@ -652,6 +655,18 @@ export default function Payroll() {
                         <TableCell className="text-right tabular-nums font-semibold">{d.paga_extra?.toFixed(2)} €</TableCell>
                       </TableRow>
                     )}
+                    {payrollData?.horas?.importe_horas_extras > 0 && (
+                      <TableRow className="bg-purple-50 dark:bg-purple-950/30">
+                        <TableCell className="flex items-center gap-1">
+                          <Clock className="w-4 h-4 text-purple-600" /> 
+                          <strong>Horas Extras</strong>
+                          <span className="text-xs text-muted-foreground">
+                            ({d.horas_extras_cantidad?.toFixed(1)}h × {d.valor_hora_extra?.toFixed(2)}€/h)
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-right tabular-nums font-semibold text-green-600">{d.horas_extras?.toFixed(2)} €</TableCell>
+                      </TableRow>
+                    )}
                     <TableRow className="bg-muted font-bold">
                       <TableCell>TOTAL BRUTO</TableCell>
                       <TableCell className="text-right tabular-nums text-lg">{payrollData?.total_bruto?.toFixed(2)} €</TableCell>
@@ -691,6 +706,21 @@ export default function Payroll() {
                     <p className="text-2xl font-bold tabular-nums">{payrollData?.horas?.festivas?.toFixed(1)}h</p>
                   </div>
                 </div>
+                
+                {/* Horas Extras */}
+                {payrollData?.horas?.extras > 0 && (
+                  <div className="mt-4 p-4 bg-purple-50 dark:bg-purple-950/30 rounded-lg border-2 border-purple-300 dark:border-purple-700">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="text-sm font-semibold text-purple-800 dark:text-purple-200">Horas Extras</p>
+                        <p className="text-xs text-purple-600 dark:text-purple-400">{d.horas_extras_cantidad?.toFixed(1)}h × {d.valor_hora_extra?.toFixed(2)}€/h</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-2xl font-bold tabular-nums text-purple-700 dark:text-purple-300">{d.horas_extras?.toFixed(2)} €</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 
                 <div className="mt-4 pt-4 border-t">
                   <p className="text-sm font-medium mb-2">Base de Cotización</p>

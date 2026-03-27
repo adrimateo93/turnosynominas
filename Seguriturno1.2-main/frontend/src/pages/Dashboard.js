@@ -305,6 +305,15 @@ export default function Dashboard() {
     e.preventDefault();
     if (!selectedDate) return;
     
+    // Verificar límite de 2 turnos por día (solo al crear nuevo)
+    if (!editingShift) {
+      const existingShifts = shifts.filter(s => s.date === selectedDate && s.company_id === selectedCompany);
+      if (existingShifts.length >= 2) {
+        toast.error("Máximo 2 turnos por día");
+        return;
+      }
+    }
+    
     const payload = {
       ...formData,
       date: selectedDate,
@@ -355,6 +364,7 @@ export default function Dashboard() {
       alarm_enabled: false,
       shift_type: "normal",
       symbol: template.symbol === "none" ? "" : (template.symbol || ""),
+      label: template.label || "",
       company_id: selectedCompany
     };
     
@@ -463,6 +473,12 @@ export default function Dashboard() {
       return;
     }
     
+    // Limitar a 2 turnos máximo por casilla
+    if (day.shifts && day.shifts.length >= 2) {
+      toast.error("Máximo 2 turnos por día");
+      return;
+    }
+    
     if (quickApplyTemplate) {
       const payload = {
         date: day.date,
@@ -476,6 +492,7 @@ export default function Dashboard() {
         alarm_enabled: false,
         shift_type: "normal",
         symbol: quickApplyTemplate.symbol === "none" ? "" : (quickApplyTemplate.symbol || ""),
+        label: quickApplyTemplate.label || "",
         company_id: selectedCompany
       };
       
@@ -837,6 +854,12 @@ export default function Dashboard() {
                       {shift.start_time_2 && shift.end_time_2 && (
                         <div className="shift-time-secondary">
                           +{shift.start_time_2.slice(0,5)}-{shift.end_time_2.slice(0,5)}
+                        </div>
+                      )}
+                      {/* Indicador de horas extras */}
+                      {shift.overtime_hours > 0 && (
+                        <div className="overtime-indicator" title={`+${shift.overtime_hours}h extras`}>
+                          €
                         </div>
                       )}
                     </div>

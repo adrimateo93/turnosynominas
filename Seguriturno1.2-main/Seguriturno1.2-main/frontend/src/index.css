@@ -1,0 +1,540 @@
+@import url('https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;600;700;800;900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand-navy: 214 65% 11%;
+    --brand-green: 160 84% 39%;
+    --brand-orange: 25 95% 53%;
+    
+    --background: 210 40% 98%;
+    --foreground: 214 65% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 214 65% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 214 65% 11%;
+    --primary: 214 65% 11%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 214 65% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 160 84% 39%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 214 65% 11%;
+    --radius: 0.375rem;
+  }
+
+  .dark {
+    --background: 222 47% 4%;
+    --foreground: 210 40% 98%;
+    --card: 217 33% 7%;
+    --card-foreground: 210 40% 98%;
+    --popover: 217 33% 7%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 160 84% 39%;
+    --primary-foreground: 214 65% 11%;
+    --secondary: 217 33% 12%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 12%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 25 95% 53%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 160 84% 39%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Chivo', sans-serif;
+    @apply tracking-tight font-bold;
+  }
+  
+  .font-mono {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .glass {
+    @apply bg-white/10 backdrop-blur-xl border border-white/20;
+  }
+  
+  .glass-dark {
+    @apply bg-black/20 backdrop-blur-xl border border-white/10;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
+
+/* Shift colors */
+.shift-color-green { background-color: #10B981; }
+.shift-color-blue { background-color: #3B82F6; }
+.shift-color-orange { background-color: #F97316; }
+.shift-color-red { background-color: #EF4444; }
+.shift-color-purple { background-color: #8B5CF6; }
+.shift-color-yellow { background-color: #EAB308; }
+.shift-color-pink { background-color: #EC4899; }
+.shift-color-cyan { background-color: #06B6D4; }
+
+/* Calendar grid */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background-color: hsl(var(--border));
+}
+
+/* Calendar grid - Large version */
+.calendar-grid-large {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background-color: hsl(var(--border));
+}
+
+/* Calendar grid - XL version */
+.calendar-grid-xl {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background-color: hsl(var(--border));
+}
+
+.calendar-day {
+  @apply bg-card p-1.5 relative overflow-hidden;
+  min-height: 90px;
+  max-height: 120px;
+  transition: background-color 0.15s ease;
+}
+
+/* Calendar day - Large version */
+.calendar-day-large {
+  @apply bg-card p-2 relative overflow-hidden;
+  min-height: 130px;
+  transition: background-color 0.15s ease;
+}
+
+/* Calendar day - XL version */
+.calendar-day-xl {
+  @apply bg-card p-3 relative;
+  min-height: 150px;
+  max-height: 150px;
+  transition: background-color 0.15s ease;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .calendar-day {
+    min-height: 100px;
+    max-height: 140px;
+    padding: 0.5rem;
+  }
+  
+  .calendar-day-large {
+    min-height: 160px;
+    padding: 0.875rem;
+  }
+  
+  .calendar-day-xl {
+    min-height: 170px;
+    max-height: 170px;
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .calendar-day-large {
+    min-height: 170px;
+    padding: 1rem;
+  }
+  
+  .calendar-day-xl {
+    min-height: 180px;
+    max-height: 180px;
+    padding: 1.25rem;
+  }
+}
+
+.calendar-day:hover,
+.calendar-day-large:hover,
+.calendar-day-xl:hover {
+  @apply bg-muted/50;
+}
+
+.calendar-day.today,
+.calendar-day-large.today,
+.calendar-day-xl.today {
+  @apply ring-2 ring-inset ring-primary;
+}
+
+/* Shift chip - compact vertical layout */
+.shift-chip {
+  @apply rounded-sm px-1 py-0.5 text-white cursor-pointer block;
+  font-size: 10px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+@media (min-width: 640px) {
+  .shift-chip {
+    font-size: 11px;
+    padding: 0.25rem 0.375rem;
+  }
+}
+
+.shift-chip:hover {
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Shifts container - vertical scroll */
+.shifts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 70px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Shifts container - Large version */
+.shifts-container-large {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 105px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Shifts container - XL version */
+.shifts-container-xl {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 110px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-top: 4px;
+}
+
+@media (min-width: 640px) {
+  .shifts-container {
+    max-height: 85px;
+    gap: 3px;
+  }
+  
+  .shifts-container-large {
+    max-height: 130px;
+    gap: 8px;
+  }
+  
+  .shifts-container-xl {
+    max-height: 135px;
+    gap: 8px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shifts-container-large {
+    max-height: 145px;
+  }
+  
+  .shifts-container-xl {
+    max-height: 145px;
+  }
+}
+
+/* Hide scrollbar but keep functionality */
+.shifts-container::-webkit-scrollbar,
+.shifts-container-large::-webkit-scrollbar {
+  width: 3px;
+}
+
+.shifts-container::-webkit-scrollbar-thumb,
+.shifts-container-large::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 2px;
+}
+
+/* Shift chip - Large version */
+.shift-chip-large {
+  @apply text-white rounded-md px-3 py-2 cursor-pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  min-height: 36px;
+}
+
+@media (min-width: 640px) {
+  .shift-chip-large {
+    padding: 8px 12px;
+    min-height: 42px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shift-chip-large {
+    padding: 10px 14px;
+    min-height: 46px;
+  }
+}
+
+.shift-chip-large:hover {
+  @apply opacity-90;
+  transform: scale(1.02);
+}
+
+/* Shift chip - XL version */
+.shift-chip-xl {
+  @apply text-white rounded-lg cursor-pointer;
+  padding: 6px 8px;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  min-height: 38px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .shift-chip-xl {
+    padding: 7px 10px;
+    min-height: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shift-chip-xl {
+    padding: 8px 12px;
+    min-height: 42px;
+  }
+}
+
+.shift-chip-xl:hover {
+  @apply opacity-90;
+  transform: scale(1.02);
+}
+
+/* Shift time row */
+.shift-time-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: white;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.shift-symbol {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.shift-icon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.shift-time-main {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+  line-height: 1.3;
+}
+
+.shift-time-secondary {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .shift-symbol {
+    font-size: 13px;
+  }
+  
+  .shift-icon {
+    width: 13px;
+    height: 13px;
+  }
+  
+  .shift-time-main {
+    font-size: 12px;
+  }
+  
+  .shift-time-secondary {
+    font-size: 11px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shift-symbol {
+    font-size: 14px;
+  }
+  
+  .shift-icon {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .shift-time-main {
+    font-size: 13px;
+  }
+  
+  .shift-time-secondary {
+    font-size: 12px;
+  }
+}
+
+/* Estilo especial para etiquetas (máx 3 caracteres) */
+.shift-label {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+@media (min-width: 640px) {
+  .shift-label {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shift-label {
+    font-size: 20px;
+  }
+}
+
+/* Shift time display */
+.shift-time-display {
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.shift-time-text {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.shift-time-text-secondary {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+@media (min-width: 640px) {
+  .shift-time-text {
+    font-size: 15px;
+  }
+  
+  .shift-time-text-secondary {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shift-time-text {
+    font-size: 16px;
+  }
+  
+  .shift-time-text-secondary {
+    font-size: 15px;
+  }
+}
+
+/* Alarm indicator */
+.alarm-indicator {
+  @apply absolute top-1 right-1 w-2 h-2 rounded-full bg-orange-500;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Data test wrapper */
+[data-debug-wrapper="true"] {
+  display: contents !important;
+}
+
+/* Stat cards */
+.stat-card {
+  @apply bg-card border rounded-lg;
+}
+
+/* Spinner */
+.spinner {
+  @apply w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin;
+}

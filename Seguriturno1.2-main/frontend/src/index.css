@@ -343,9 +343,9 @@
 /* Shift chip - XL version */
 .shift-chip-xl {
   @apply text-white rounded-lg cursor-pointer;
-  padding: 6px 8px;
+  padding: 8px 10px;
   transition: opacity 0.15s ease, transform 0.1s ease;
-  min-height: 38px;
+  min-height: 44px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -356,15 +356,15 @@
 
 @media (min-width: 640px) {
   .shift-chip-xl {
-    padding: 7px 10px;
-    min-height: 40px;
+    padding: 10px 12px;
+    min-height: 48px;
   }
 }
 
 @media (min-width: 1024px) {
   .shift-chip-xl {
-    padding: 8px 12px;
-    min-height: 42px;
+    padding: 12px 14px;
+    min-height: 52px;
   }
 }
 
@@ -451,23 +451,27 @@
   }
 }
 
-/* Estilo especial para etiquetas (máx 3 caracteres) */
+/* Estilo especial para etiquetas (máx 3 caracteres) - GRANDE Y VISIBLE */
 .shift-label {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 900;
   letter-spacing: 1px;
   text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  line-height: 1;
 }
 
 @media (min-width: 640px) {
   .shift-label {
-    font-size: 18px;
+    font-size: 24px;
+    letter-spacing: 1.5px;
   }
 }
 
 @media (min-width: 1024px) {
   .shift-label {
-    font-size: 20px;
+    font-size: 28px;
+    letter-spacing: 2px;
   }
 }
 
@@ -517,6 +521,41 @@
 .alarm-indicator {
   @apply absolute top-1 right-1 w-2 h-2 rounded-full bg-orange-500;
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Overtime indicator (€) */
+.overtime-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fef08a;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.3);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+@media (min-width: 640px) {
+  .overtime-indicator {
+    font-size: 12px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .overtime-indicator {
+    font-size: 13px;
+    width: 20px;
+    height: 20px;
+  }
 }
 
 @keyframes pulse {

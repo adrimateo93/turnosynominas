@@ -1,0 +1,106 @@
+{
+  "app_name": "SeguriTurno",
+  "project_context": {
+    "target_audience": "Security guards and private security workers in Spain (2026 agreement)",
+    "aesthetic": "DASHBOARDS & ADMIN PANELS - The Performance Pro (Tactical Minimalism)"
+  },
+  "design_system": {
+    "theme": "Dual Light/Dark theme. Default to Dark Mode for eye comfort during night shifts, but ensure Light Mode has high contrast for payroll/PDF exports.",
+    "colors": {
+      "brand_navy": "#0B192C",
+      "brand_green": "#10B981",
+      "brand_orange": "#F97316",
+      "background_dark": "#020617",
+      "surface_dark": "#0F172A",
+      "border_dark": "#1E293B",
+      "background_light": "#F8FAFC",
+      "surface_light": "#FFFFFF",
+      "border_light": "#E2E8F0",
+      "text_dark_mode": "#F8FAFC",
+      "text_light_mode": "#0F172A"
+    },
+    "typography": {
+      "headings": "Chivo, sans-serif",
+      "body": "IBM Plex Sans, sans-serif",
+      "mono": "IBM Plex Mono, monospace",
+      "rules": "DO NOT use Inter or Roboto for headings. Headings must use tracking-tight. Data/numbers must use tabular-nums. Labels must be uppercase and tracking-[0.15em]."
+    },
+    "layout": {
+      "spacing": "Use p-6 or p-8 for containers. Grid gaps should be tight (gap-1 to gap-4) to simulate data density.",
+      "dashboard_grid": "Bento layout: grid-cols-1 xl:grid-cols-12. Main calendar spans 8 cols. Sidebar (payroll/upcoming) spans 4 cols.",
+      "alignment": "Strict left-alignment. Never center-align paragraphs or data."
+    },
+    "surfaces": {
+      "calendar": "Grid Borders (The Technical Look). 1px border-collapse style.",
+      "cards": "Solid flat colors. 1px border. No soft shadows. Sharp or max rounded-md."
+    },
+    "motion": {
+      "rules": "No 'transition: all'. Use explicit 'transition-colors' or 'transition-transform'. Add micro-interactions (hover:scale-[1.02]) for shift chips. Pulse animation for active alarms."
+    }
+  },
+  "components": {
+    "calendar": {
+      "instructions": "Custom Grid (grid-cols-7). Do not use Shadcn for the main calendar layout, only for date pickers. Days must be customizable with color chips.",
+      "shift_chips": "Use tactile neumorphism or flat high-contrast blocks. Display start/end time, overtime dot, and alarm icon if active."
+    },
+    "forms": {
+      "instructions": "Use Shadcn UI. Override default rounded-md to rounded-sm. Focus rings must be brand_navy or brand_green."
+    },
+    "toasts": {
+      "instructions": "Use sonner for notifications (e.g., alarm triggers, shift saves)."
+    }
+  },
+  "features_implementation": {
+    "payroll_calculator": "Must format numbers in Euros (€). Use strictly tabular-nums.",
+    "alarm": "Browser Notification API. Indicate visually on the UI with a glowing brand_orange or brand_green bell icon.",
+    "pdf_export": "Ensure the exported layout strips dark mode and uses high-contrast black on white."
+  },
+  "assets": {
+    "icons": "lucide-react",
+    "images": [
+      {
+        "url": "/seguriturnos.png",
+        "description": "SeguriTurno full logo",
+        "category": "Header / Navbar"
+      },
+      {
+        "url": "/seguriturnos icono.png",
+        "description": "SeguriTurno icon",
+        "category": "Favicon / Mobile Logo"
+      }
+    ]
+  },
+  "accessibility": {
+    "contrast": "Minimum 4.5:1 text contrast. White text on colored shift chips.",
+    "testing_attributes": "All interactive and key informational elements MUST include a 'data-testid' attribute (e.g., 'data-testid=\"calendar-day-15\"')."
+  },
+  "instructions_to_main_agent": [
+    "CREATE files with .js extension, NOT .tsx (e.g., /app/frontend/src/pages/Dashboard.js).",
+    "Implement the 2026 Spanish Private Security Collective Agreement logic inside the frontend calculations or backend API.",
+    "Night hours (22:00-06:00) require intersection calculation with shift times.",
+    "Holiday hours require checking weekends and 2026 Spanish National Holidays.",
+    "CRITICAL: DO NOT use complete transparent background in header, overlays, any surface that has content under it.",
+    "Add GENERAL UI UX DESIGN GUIDELINES."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "You tend to converge toward generic, 'on distribution' outputs. In frontend design, this creates what users call the 'AI slop' aesthetic. Avoid this: make creative, distinctive frontends that surprise and delight.",
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients.",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy.",
+    "Use glass-morphism effects with backdrop filters (12-24px blur).",
+    "You MUST NOT apply universal transition. Eg: 'transition: all'. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms.",
+    "You MUST NOT center align the app container, ie do not add '.App { text-align: center; }' in the css file. This disrupts the human natural reading flow of text.",
+    "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style.",
+    "NEVER: use AI assistant Emoji characters like 🤖🧠💭💡🔮🎯📚🎭🎬🎪🎉🎊🎁🎀🎂🍰🎈🎨🎰💰💵💳🏦💎🪙💸🤑📊📈📉💹🔢🏆🥇 etc for icons.",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.",
+    "Main agent relies on these image URLs. Missing categories (especially sponsor logos) = main agent will use placeholder text which is FORBIDDEN.",
+    "Prioritize using pre-existing components from src/components/ui when applicable.",
+    "Create new components that match the style and conventions of existing components when needed.",
+    "Examine existing components to understand the project's component patterns before creating new ones.",
+    "Components MUST use named exports (export const ComponentName = ...).",
+    "Pages MUST use default exports (export default function PageName() {...}).",
+    "Use 'sonner' for toasts. Sonner component are located in /app/frontend/src/components/ui/sonner.js"
+  ]
+}

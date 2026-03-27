@@ -11,8 +11,7 @@ import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
 import Settings from "@/pages/Settings";
 import Payroll from "@/pages/Payroll";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = "https://seguriturno1-5.onrender.com";
 export const API = `${BACKEND_URL}/api`;
 
 // Register Service Worker for PWA and Push Notifications
@@ -157,9 +156,9 @@ const Layout = ({ children }) => {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <img 
-              src="https://customer-assets.emergentagent.com/job_7ef7a8b4-f925-49e3-b2a6-713ab2418e30/artifacts/cnpee15y_seguriturnos.png" 
+              src="/logo.png" 
               alt="SeguriTurno" 
-              className="h-10"
+              className="h-12 sm:h-14"
               data-testid="app-logo"
             />
           </div>
@@ -274,5 +273,3 @@ function App() {
     </BrowserRouter>
   );
 }
-
-export default App;
