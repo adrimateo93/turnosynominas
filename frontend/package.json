@@ -46,4 +46,11 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.2",
     "react-resizable-panels": "^3.0.1",
-    "react-router-dom":
+    "react-router-dom": "^6.23.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "dev": "react-scripts start"
+  }
+}
