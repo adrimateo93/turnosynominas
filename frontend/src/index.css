@@ -577,10 +577,3 @@
 .spinner {
   @apply w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin;
 }
-
-iframe[src*="emergent"],
-div[class*="emergent"],
-div[id*="emergent"],
-a[href*="emergent"] {
-  display: none !important;
-}
